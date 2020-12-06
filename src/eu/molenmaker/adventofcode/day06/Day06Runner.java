@@ -39,9 +39,7 @@ public class Day06Runner {
         HashSet<Character> uniqueAnswers = new HashSet<>();
         for (String line: groupAnswers) {
             for (char c:line.toCharArray()) {
-                if (!uniqueAnswers.contains(c)) {
-                    uniqueAnswers.add(c);
-                }
+                uniqueAnswers.add(c);
             }
         }
         System.out.println(String.format("Group with %d answers", uniqueAnswers.size()));
@@ -49,23 +47,28 @@ public class Day06Runner {
     }
 
     private static long processGroup(ArrayList<String> groupAnswers) {
-        HashSet<Character> allAnswers = new HashSet<>();
-        boolean firstLine = true;
+        HashSet<Character> commonAnswers = new HashSet<>();
 
+        // Assume the first row contains all common answers
         for (char c:groupAnswers.get(0).toCharArray()) {
-            allAnswers.add(c);
+            commonAnswers.add(c);
         }
-        for (String line: groupAnswers) {
-            HashSet<Character> newAllAnswers = new HashSet<>();
-            for (char c:line.toCharArray()) {
-                if (allAnswers.contains(c)) {
-                    newAllAnswers.add(c);
+
+        // Loop through all answers per person in the group and if their answers are found in the list with
+        // common answers add it to a new set of common answers and make that set the new list of common answers
+        for (String personalAnswers: groupAnswers) {
+            HashSet<Character> newCommonAnswers = new HashSet<>();
+            for (char c:personalAnswers.toCharArray()) {
+                if (commonAnswers.contains(c)) {
+                    newCommonAnswers.add(c);
                 }
             }
-            allAnswers = newAllAnswers;
+            // What remains in new common answers are only the answes common to the set and the answers of
+            // the current person
+            commonAnswers = newCommonAnswers;
         }
-        System.out.println(String.format("Group with %d common answers", allAnswers.size()));
-        return allAnswers.size();
+        System.out.println(String.format("Group with %d common answers", commonAnswers.size()));
+        return commonAnswers.size();
     }
 
 }
